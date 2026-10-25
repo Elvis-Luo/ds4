@@ -218,6 +218,17 @@ test-metal-ssd-experts: tests/test_metal_ssd_experts
 	./tests/test_metal_ssd_experts --q4
 	./tests/test_metal_ssd_experts --mxfp4
 
+tests/test_metal_cache_inflight: tests/test_metal_cache_inflight.m ds4_metal.m ds4_gpu.h ds4_image.o
+	$(CC) $(OBJCFLAGS) -I. -o $@ $< ds4_image.o $(METAL_LDLIBS)
+
+.PHONY: test-metal-cache-inflight
+test-metal-cache-inflight: tests/test_metal_cache_inflight
+	./tests/test_metal_cache_inflight prune
+	./tests/test_metal_cache_inflight all-inflight
+	./tests/test_metal_cache_inflight clear
+	./tests/test_metal_cache_inflight completed
+	./tests/test_metal_cache_inflight protected
+
 tests/test_metal_command_memory: tests/test_metal_command_memory.c ds4_gpu.h $(CORE_OBJS)
 	$(CC) $(CFLAGS) -I. -o $@ $< $(CORE_OBJS) $(METAL_LDLIBS)
 
@@ -1347,6 +1358,7 @@ ds4_cpu_test_hooks.o ds4_cuda_test_hooks.o tests/test_session_state.o \
 tests/test_session_state_gpu.o: ds4_tool_text.h
 
 clean:
+	rm -f tests/test_metal_cache_inflight
 	rm -f tests/test_mmvq_cuda tests/test_mmvq_rocm
 	rm -f tests/test_qwen4_ngrams
 	rm -f tests/test_qwen4_ngram_state

@@ -17345,7 +17345,7 @@ static void ds4_gpu_stream_expert_cache_clear_layer(uint32_t layer) {
          expert++) {
         ds4_gpu_stream_expert_cache_clear_entry(layer, expert, 0);
     }
-    g_stream_expert_cache_layer_count[layer] = 0;
+    /* In-flight entries survive clear_entry and must remain counted. */
 }
 
 static int ds4_gpu_stream_expert_cache_prepare_selected_batch(
